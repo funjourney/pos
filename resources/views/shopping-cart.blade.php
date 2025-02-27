@@ -39,10 +39,6 @@
     <h2 class="mb-4">Shopping</h2>
     <div class="accordion" id="productAccordion"></div>
   </div>
-  <div class="col-md-12 mb-5">
-    <h2 class="mb-4">Inventory</h2>
-  </div>
-  <div id="tblInvOrder"></div>
 </main>
 
 <!-- Cart Modal -->
@@ -166,37 +162,6 @@
     document.getElementById('cart-total').textContent = total.toFixed(3);
     new bootstrap.Modal(document.getElementById('cartModal')).show();
   }
-  function renderOrderTable(data) {
-    if (data.length === 0) {
-      document.getElementById('tblInvOrder').innerHTML = "<p>No orders available.</p>";
-      return;
-    }
-
-    let tableHtml = `
-      <table class="table table-bordered">
-        <thead class="table-dark">
-          <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${data.map(item => `
-            <tr>
-              <td>${item.name}</td>
-              <td>${item.qty}</td>
-              <td>Rp ${item.price.toFixed(3)}</td>
-              <td>Rp ${(item.price * item.qty).toFixed(3)}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-
-    document.getElementById('tblInvOrder').innerHTML = tableHtml;
-  }
 
   function orderNow() {
     if (cart.length === 0) {
@@ -206,8 +171,6 @@
 
     // Simpan data pesanan sebelum mengosongkan cart
     let orderData = [...cart];
-
-    alert('Thank you for your order!');
     
     // Kosongkan cart
     cart = [];
@@ -216,8 +179,8 @@
     // Render ulang produk agar quantity reset
     renderProducts();
 
-    // Tampilkan tabel order setelah checkout
-    renderOrderTable(orderData);
+    // Pindah
+    window.location.href = '/payment';    
   }
 
   renderProducts();

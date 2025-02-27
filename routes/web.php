@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Http\Request;
 
+// Tampilkan halaman utama
 Route::get('/', function () {
     return view('welcome');
 });
@@ -12,18 +13,30 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-// Proses login (pastikan controller sudah dibuat)
-Route::post('/login', function () {
-    // Contoh login sederhana tanpa database (hanya untuk testing)
-    request()->validate([
+// Proses login dengan email
+Route::post('/login', function (Request $request) {
+    // Validasi input
+    $credentials = $request->validate([
         'email' => 'required|email',
-        'password' => 'required'
+        'password' => 'required|string',
     ]);
 
-    return redirect('/')->with('success', 'Login berhasil!');
+    // Cek kredensial (hardcoded sesuai permintaan)
+    if ($credentials['email'] === 'user@example.com' && $credentials['password'] === 'password') {
+        session(['user' => 'authenticated']); // Simpan sesi login
+        return redirect('/shopping-chart');
+    }
+
+    return back()->with('error', 'Email atau password salah.');
 });
 
-// Tampilkan halaman shopping-chart
+// Tampilkan halaman shopping-chart (dengan middleware)
 Route::get('/shopping-chart', function () {
     return view('shopping-chart');
-})->name('shopping-chart');
+})->name('shopping-chart')->middleware('auth.session');
+
+// Logout
+Route::post('/logout', function () {
+    session()->forget('user'); // Hapus sesi login
+    return redirect('/login')->with('success', 'Anda berhasil logout.');
+});

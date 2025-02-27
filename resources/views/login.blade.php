@@ -1,23 +1,17 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        .form-signin {
-            max-width: 330px;
-            padding: 1rem;
-            margin: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body class="text-center">
-    <main class="form-signin">
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <img class="mb-4 mx-auto d-block" src="https://o2.funjourney.co.id/assets/images/sites/FJ_logo.png" alt="Logo" width="144" height="144">
+        <h1 class="text-center mb-4">Login</h1>
+        
         @if (session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
@@ -32,42 +26,52 @@
 
         <form action="{{ url('/login') }}" method="POST">
             @csrf
-            <img class="mb-4" src="https://o2.funjourney.co.id/assets/images/sites/FJ_logo.png" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-
-            <div class="form-floating">
-                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="inputEmail" placeholder="Email address" required autofocus value="{{ old('email') }}">
-                <label for="inputEmail">Email address</label>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" required autofocus value="{{ old('email') }}">
                 @error('email')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
-
-            <div class="form-floating">
-                <input type="password" name="password" class="form-control mt-2 @error('password') is-invalid @enderror" id="inputPassword" placeholder="Password" required>
-                <label for="inputPassword">Password</label>
+            <div class="mb-3 position-relative">
+                <label for="password" class="form-label">Password:</label>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                    <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                        <i class="fas fa-eye-slash"></i>
+                    </span>
+                </div>
                 @error('password')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
-
-            <div class="checkbox my-3">
-                <label>
-                    <input type="checkbox" name="remember"> Remember me
-                </label>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label" for="remember">Remember me</label>
             </div>
-
-            <button class="btn btn-lg btn-primary w-100" type="submit">Sign in</button>
-
-            <p class="mt-5 mb-3 text-muted">&copy; {{ date('Y') }}</p>
+            <button type="submit" class="btn btn-dark w-100">Login</button>
         </form>
-    </main>
+    </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            var passwordInput = document.getElementById('password');
+            var icon = this.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    </script>
 </body>
 </html>

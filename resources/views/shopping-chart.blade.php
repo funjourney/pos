@@ -1,25 +1,48 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shopping Cart</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .category-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+    .product-img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body>
+
 <header class="bg-dark text-white p-3">
-  <div class="container d-flex justify-content-between">
-    <h2>Shopping Cart</h2>
-    <button class="btn btn-warning" onclick="viewCart()">🛒 View Cart (<span id="cart-count">0</span>)</button>
+  <div class="container d-flex justify-content-between align-items-center">
+    {{-- <h2>Shopping Cart</h2> --}}
+    <div>
+      <button class="btn btn-warning me-2" onclick="viewCart()">🛒 View Cart (<span id="cart-count">0</span>)</button>
+      <form action="/logout" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-danger">🚪 Logout</button>
+      </form>
+    </div>
   </div>
 </header>
 
 <main class="container py-5">
-  <h3>Makanan</h3>
-  <div class="row" id="food-list"></div>
-  
-  <h3 class="mt-4">Minuman</h3>
-  <div class="row" id="drink-list"></div>
+  <div class="col-md-12 mb-5">
+    <h2 class="mb-4">Shopping</h2>
+    <div class="accordion" id="productAccordion"></div>
+  </div>
+  <div class="col-md-12 mb-5">
+    <h2 class="mb-4">Inventory</h2>
+  </div>
+  <div id="tblInvOrder"></div>
 </main>
 
 <!-- Cart Modal -->
@@ -32,7 +55,7 @@
       </div>
       <div class="modal-body">
         <ul id="cart-items" class="list-group"></ul>
-        <p class="mt-3">Total: $<span id="cart-total">0.00</span></p>
+        <p class="mt-3">Total: Rp<span id="cart-total">0</span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -44,51 +67,90 @@
 
 <script>
   let cart = [];
-  let products = {
-    makanan: [
-      { name: "Burger", price: 5.00, img: "https://via.placeholder.com/150" },
-      { name: "Pizza", price: 8.00, img: "https://via.placeholder.com/150" }
-    ],
-    minuman: [
-      { name: "Soda", price: 2.00, img: "https://via.placeholder.com/150" },
-      { name: "Juice", price: 3.50, img: "https://via.placeholder.com/150" }
-    ]
-  };
+  let categories = [
+    {
+      name: "Makanan",
+      img: "https://img.freepik.com/premium-photo/traditional-japanese-meal-with-fried-chicken-pork-cutlets-soup_1007521-47245.jpg",
+      listProducts: [
+        { name: "Burger", price: 25.000, img: "https://img.freepik.com/free-photo/burger_1339-1550.jpg" },
+        { name: "Pizza", price: 18.000, img: "https://img.freepik.com/free-photo/hawaiian-pizza_1203-2455.jpg" },
+        { name: "Fried Rice", price: 18.000, img: "https://img.freepik.com/free-photo/stir-fried-chili-paste-chicken-with-rice-fried-eggs-white-plate-wooden-table_1150-28443.jpg" },
+        { name: "Fried Chicken", price: 18.000, img: "https://img.freepik.com/free-photo/close-up-fried-chicken-drumsticks_23-2148682835.jpg" }
+      ]
+    },
+    {
+      name: "Minuman",
+      img: "https://img.freepik.com/premium-photo/cup-hot-tea-drink-tea_87720-32695.jpg",
+      listProducts: [
+        { name: "Soda", price: 15.000, img: "https://img.freepik.com/free-photo/tasty-bubble-tea-drinks-arrangement_23-2149870687.jpg" },
+        { name: "Milk", price: 3.5000, img: "https://img.freepik.com/free-photo/glass-with-milk-chocolate_23-2148937237.jpg" },
+        { name: "Orange Juice", price: 15.000, img: "https://img.freepik.com/premium-photo/glass-orange-juice_106857-98.jpg" },
+        { name: "Manggo Juice", price: 15.000, img: "https://img.freepik.com/free-photo/mango-shake-fresh-tropical-fruit-smoothies_501050-963.jpg" }
+      ]
+    }
+  ];
 
   function renderProducts() {
-    let foodList = document.getElementById('food-list');
-    let drinkList = document.getElementById('drink-list');
+    let container = document.getElementById('productAccordion');
+    container.innerHTML = '';
 
-    function createProductCard(product) {
-      return `<div class="col-md-4">
-        <div class="card">
-          <img src="${product.img}" class="card-img-top" alt="${product.name}">
-          <div class="card-body">
-            <h5 class="card-title">${product.name}</h5>
-            <p class="card-text">$${product.price.toFixed(2)}</p>
-            <button class="btn btn-danger" onclick="updateCart('${product.name}', ${product.price}, -1)">-</button>
-            <span id="qty-${product.name}">0</span>
-            <button class="btn btn-primary" onclick="updateCart('${product.name}', ${product.price}, 1)">+</button>
-          </div>
-        </div>
-      </div>`;
-    }
-
-    foodList.innerHTML = products.makanan.map(createProductCard).join('');
-    drinkList.innerHTML = products.minuman.map(createProductCard).join('');
+    categories.forEach((category, index) => {
+        let categoryId = `category-${index}`;
+        let categoryHtml = `
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-${categoryId}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#collapse-${categoryId}" aria-expanded="false" aria-controls="collapse-${categoryId}">
+                        <img src="${category.img}" class="category-img"> ${category.name}
+                    </button>
+                </h2>
+                <div id="collapse-${categoryId}" class="accordion-collapse collapse" aria-labelledby="heading-${categoryId}" 
+                    data-bs-parent="#productAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            ${category.listProducts.map(product => `
+                                <div class="col-md-4 mb-4">
+                                    <div class="card">
+                                        <img src="${product.img}" class="product-img card-img-top" alt="${product.name}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${product.name}</h5>
+                                            <p class="card-text">Rp ${product.price.toFixed(3)}</p>
+                                            <button class="btn btn-danger mx-2" onclick="updateCart('${product.name}', ${product.price.toFixed(3)}, -1)">-</button>
+                                            <span id="qty-${product.name}">0</span>
+                                            <button class="btn btn-primary mx-2" onclick="updateCart('${product.name}', ${product.price.toFixed(3)}, 1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += categoryHtml;
+    });
   }
 
   function updateCart(name, price, change) {
     let existing = cart.find(item => item.name === name);
+    
     if (existing) {
-      existing.qty += change;
-      if (existing.qty <= 0) cart = cart.filter(item => item.name !== name);
+        existing.qty += change;
+        if (existing.qty <= 0) {
+            cart = cart.filter(item => item.name !== name);
+        }
     } else if (change > 0) {
-      cart.push({ name, price, qty: 1 });
+        existing = { name, price, qty: 1 }; // Buat objek sebelum push
+        cart.push(existing);
     }
-    document.getElementById(`qty-${name}`).textContent = existing ? existing.qty : 0;
+
+    // Pastikan elemen selalu diperbarui
+    let quantityElement = document.getElementById(`qty-${name}`);
+    quantityElement.textContent = existing ? existing.qty : 0;
+    
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
-  }
+}
+
 
   function viewCart() {
     let cartItems = document.getElementById('cart-items');
@@ -97,12 +159,43 @@
     cart.forEach(item => {
       total += item.price * item.qty;
       let li = document.createElement('li');
-      li.textContent = `${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}`;
+      li.textContent = `${item.name} x${item.qty} - Rp${(item.price * item.qty).toFixed(3)}`;
       li.classList.add('list-group-item');
       cartItems.appendChild(li);
     });
-    document.getElementById('cart-total').textContent = total.toFixed(2);
+    document.getElementById('cart-total').textContent = total.toFixed(3);
     new bootstrap.Modal(document.getElementById('cartModal')).show();
+  }
+  function renderOrderTable(data) {
+    if (data.length === 0) {
+      document.getElementById('tblInvOrder').innerHTML = "<p>No orders available.</p>";
+      return;
+    }
+
+    let tableHtml = `
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(item => `
+            <tr>
+              <td>${item.name}</td>
+              <td>${item.qty}</td>
+              <td>Rp ${item.price.toFixed(3)}</td>
+              <td>Rp ${(item.price * item.qty).toFixed(3)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    document.getElementById('tblInvOrder').innerHTML = tableHtml;
   }
 
   function orderNow() {
@@ -110,14 +203,26 @@
       alert('Your cart is empty!');
       return;
     }
+
+    // Simpan data pesanan sebelum mengosongkan cart
+    let orderData = [...cart];
+
     alert('Thank you for your order!');
+    
+    // Kosongkan cart
     cart = [];
     document.getElementById('cart-count').textContent = 0;
+    
+    // Render ulang produk agar quantity reset
     renderProducts();
+
+    // Tampilkan tabel order setelah checkout
+    renderOrderTable(orderData);
   }
 
   renderProducts();
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

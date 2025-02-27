@@ -63,6 +63,17 @@ Route::get('/process', function () {
     return view('process');
 })->name('process')->middleware('auth.session');
 
+
+// Tampilkan halaman scan-barcode-table (dengan middleware)
+Route::get('/scan-barcode-table', function () {
+    return view('scan-barcode-table');
+})->name('scan-barcode-table')->middleware('auth.session');
+
+// Tampilkan halaman inventory (dengan middleware)
+Route::get('/inventory', function () {
+    return view('inventory');
+})->name('inventory')->middleware('auth.session');
+
 // Logout
 Route::post('/logout', function () {
     session()->forget('user'); // Hapus sesi login

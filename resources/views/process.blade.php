@@ -12,7 +12,7 @@
     <div class="container d-flex justify-content-between align-items-center">
       <h2>Process</h2>
       <div>
-        <a href="/shopping-cart" class="btn btn-secondary me-2">← Back to Cart</a>
+        <a href="javascript:history.back()" class="btn btn-secondary me-2">← Back to Previous Page</a>
         <form action="/logout" method="POST" class="d-inline">
           @csrf
           <button type="submit" class="btn btn-danger">🚪 Logout</button>

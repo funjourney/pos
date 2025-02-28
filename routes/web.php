@@ -24,6 +24,9 @@ Route::post('/login', function (Request $request) {
     // Cek kredensial (hardcoded sesuai permintaan)
     if ($credentials['email'] === 'user@example.com' && $credentials['password'] === 'password') {
         session(['user' => 'authenticated']); // Simpan sesi login
+        return redirect('/inventory');
+    } else if ($credentials['email'] === 'guest@example.com' && $credentials['password'] === 'password') {
+        session(['user' => 'authenticated']); // Simpan sesi login
         return redirect('/shopping-cart');
     }
 
@@ -67,7 +70,7 @@ Route::get('/process', function () {
 // Tampilkan halaman scan-barcode-table (dengan middleware)
 Route::get('/scan-barcode-table', function () {
     return view('scan-barcode-table');
-})->name('scan-barcode-table')->middleware('auth.session');
+})->name('scan-barcode-table');
 
 // Tampilkan halaman inventory (dengan middleware)
 Route::get('/inventory', function () {

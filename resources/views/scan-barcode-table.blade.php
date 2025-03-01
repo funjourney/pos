@@ -26,29 +26,30 @@
             const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
             const csrfToken = csrfTokenMeta ? csrfTokenMeta.content : '';
                 
-            fetch("{{ url('/login') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken
-                },
-                body: JSON.stringify({
-                    email: "guest@example.com",
-                    password: "password"
-                })
+        fetch("{{ url('/login') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                email: "guest@example.com",
+                password: "password"
             })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = redirectUrl; // Langsung redirect tanpa parsing JSON
-                } else {
-                    document.getElementById("result").innerText = "Login gagal, silakan coba lagi.";
-                }
-            })
-            .catch(error => {
-                document.getElementById("result").innerText = "Error: " + error.message;
-            });
-        }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = redirectUrl;
+            } else {
+                document.getElementById("result").innerText = "Login gagal, silakan coba lagi.";
+            }
+        })
+        .catch(error => {
+            document.getElementById("result").innerText = "Error: " + error.message;
+        });
 
+        }
 
         document.getElementById("requestCamera").addEventListener("click", function() {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {

@@ -9,37 +9,41 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-    
-        $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember'); // Cek apakah remember me dicentang
-    
+
+        $remember = $request->has('remember'); // Cek apakah "Remember Me" dicentang
+
+        // Coba login
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-    
-            // Cek apakah pengguna login sebagai guest@example.com
-            if ($request->email === 'user@example.com') {
-                return redirect('/inventory');
+            $user = Auth::user();
+
+            // Redirect berdasarkan email
+            if ($user->email === 'user@example.com') {
+                return redirect()->intended('/inventory');
             } else {
-                return redirect('/shopping-cart');
-            }    
+                return redirect()->intended('/shopping-cart');
+            }
         }
+
+        // Jika login gagal
+        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+    }
+
+    public function logout()
+    {
+        $user = Auth::user(); // Dapatkan user sebelum logout
+        Auth::logout();
     
-        return back()->with('error', 'Email atau password salah.');
+        if ($user && $user->email === 'user@example.com') {
+            return redirect('/login');
+        } else {
+            return redirect('/scan-barcode-table');
+        }
     }
     
-
-
-public function logout(Request $request)
-{
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/login')->with('success', 'Anda berhasil logout.');
-}
-
 }

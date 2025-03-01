@@ -11,14 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Daftarkan middleware global jika diperlukan
-        // $middleware->append(\App\Http\Middleware\SomeMiddleware::class);
-
-        // Daftarkan middleware dengan alias
-        $middleware->alias([
-            'auth.session' => \App\Http\Middleware\SessionAuth::class,
-        ]);
-    })
+        // Middleware khusus bisa didaftarkan di sini jika diperlukan
+    })    
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })

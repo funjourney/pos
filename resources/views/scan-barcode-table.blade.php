@@ -20,67 +20,106 @@
     </div>
 
     <script>
-        function loginUser(redirectUrl) {
-            document.getElementById("result").innerText = "Memproses login, harap tunggu...";
-                
-            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-            const csrfToken = csrfTokenMeta ? csrfTokenMeta.content : '';
-                
-        fetch("{{ url('/login') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                email: "guest@example.com",
-                password: "password"
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = redirectUrl;
-            } else {
-                document.getElementById("result").innerText = "Login gagal, silakan coba lagi.";
-            }
-        })
-        .catch(error => {
-            document.getElementById("result").innerText = "Error: " + error.message;
-        });
+        let scannerActive = false;
+        let html5QrCode;
 
+        async function startScanner() {
+            if (scannerActive) return;
+            scannerActive = true;
+
+            console.log("🔹 Memulai scanner...");
+            document.getElementById("requestCamera").style.display = "none";
+            document.getElementById("reader").style.display = "block";
+            document.getElementById("result").innerText = "Arahkan barcode ke kamera...";
+
+            html5QrCode = new Html5Qrcode("reader");
+            try {
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 250 },
+                    async (decodedText, decodedResult) => {
+                        console.log("🔹 Barcode Terdeteksi:", decodedText);
+
+                        // Hentikan scanner sebelum redirect
+                        await html5QrCode.stop();
+                        console.log("✅ Scanning dihentikan.");
+
+                        document.getElementById("result").innerText = "Barcode: " + decodedText;
+
+                        // Redirect setelah membaca barcode
+                        loginUser("{{ url('/shopping-cart') }}");
+                    }
+                );
+            } catch (err) {
+                console.error("❌ Gagal memulai scanner:", err);
+                document.getElementById("result").innerText = "Gagal memulai scanner: " + err.message;
+            }
         }
 
-        document.getElementById("requestCamera").addEventListener("click", function() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                document.getElementById("result").innerText = "Browser tidak mendukung akses kamera";
-                return;
-            }
+        async function loginUser(redirectUrl) {
+            console.log("🔹 Login User dipanggil. Redirect ke:", redirectUrl);
+            document.getElementById("result").innerText = "Memproses login, harap tunggu...";
 
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    document.getElementById("requestCamera").style.display = "none";
-                    document.getElementById("reader").style.display = "block";
+            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.content : '';
 
-                    let html5QrCode = new Html5Qrcode("reader");
-                    html5QrCode.start(
-                        { facingMode: "environment" },
-                        { fps: 10, qrbox: 250 },
-                        (decodedText, decodedResult) => {
-                            if (decodedText === "VALID_BARCODE") {
-                                loginUser("{{ url('/shopping-cart') }}");
-                            } else {
-                                document.getElementById("result").innerText = "Barcode tidak valid";
-                            }
-                        }
-                    );
-                })
-                .catch(function(err) {
-                    document.getElementById("result").innerText = "Akses kamera ditolak: " + err.message;
+            console.log("🔹 CSRF Token:", csrfToken);
+
+            try {
+                const response = await fetch("{{ url('/login') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: "guest@example.com",
+                        password: "password"
+                    })
                 });
-        });
 
+                if (response.ok) {
+                    console.log("✅ Login berhasil, mengarahkan ke:", redirectUrl);
+                    window.location.href = redirectUrl;
+                } else {
+                    console.error("❌ Login gagal.");
+                    document.getElementById("result").innerText = "Login gagal, silakan coba lagi.";
+                }
+            } catch (error) {
+                console.error("❌ Error saat login:", error);
+                document.getElementById("result").innerText = "Error: " + error.message;
+            }
+        }
+
+        
+        //     .then(response => {
+        //         console.log("🔹 Status Response Login:", response.status);
+        //         return response.json().catch(() => ({})); // Menangani jika tidak ada JSON
+        //     })
+        //     .then(data => {
+        //         console.log("🔹 Response Data:", data);
+        //         if (data.success || data.status === "success") {
+        //             console.log("✅ Login berhasil! Redirecting...");
+        //             setTimeout(() => {
+        //                 console.log("🔹 Redirect dilakukan sekarang...");
+        //                 window.location.href = redirectUrl;
+        //             }, 500);
+        //         } else {
+        //             console.error("❌ Login gagal. Response:", data);
+        //             document.getElementById("result").innerText = "Login gagal, silakan coba lagi.";
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error("❌ Error saat login:", error);
+        //         document.getElementById("result").innerText = "Error: " + error.message;
+        //     });
+        // }
+
+        document.getElementById("requestCamera").addEventListener("click", startScanner);
+        
         document.getElementById("skipScan").addEventListener("click", function() {
+            console.log("🔹 Tombol Lewati diklik. Redirect ke shopping cart...");
             loginUser("{{ url('/shopping-cart') }}");
         });
     </script>

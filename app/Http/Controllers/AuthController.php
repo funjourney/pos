@@ -15,35 +15,39 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $remember = $request->has('remember'); // Cek apakah "Remember Me" dicentang
+        $remember = $request->has('remember');
 
         // Coba login
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $user = Auth::user();
 
-            // Redirect berdasarkan email
-            if ($user->email === 'user@example.com') {
-                return redirect()->intended('/inventory');
-            } else {
-                return redirect()->intended('/shopping-cart');
-            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Login berhasil',
+                'user' => $user,
+                'redirect' => $user->email === 'user@example.com' ? '/inventory' : '/shopping-cart'
+            ]);
         }
 
         // Jika login gagal
-        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+        return response()->json([
+            'success' => false,
+            'message' => 'Email atau password salah'
+        ], 401);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         $user = Auth::user(); // Dapatkan user sebelum logout
         Auth::logout();
-    
-        if ($user && $user->email === 'user@example.com') {
-            return redirect('/login');
-        } else {
-            return redirect('/scan-barcode-table');
-        }
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout berhasil',
+            'redirect' => $user && $user->email === 'user@example.com' ? '/login' : '/scan-barcode-table'
+        ]);
     }
-    
 }

@@ -1,3 +1,26 @@
+# catatan pengembang 
+
+php artisan migrate:fresh  
+//untuk migrate ulang sebuat table
+
+php artisan optimize:clear   
+//untuk membersihkan seluruh cache laravel 12
+
+
+npm cache clean
+//menghapus cache pada npm
+
+npm run dev 
+// agar hot reload, ketika perubahan dilakukan, akses kembali  https://pos.test  
+// atau h + enter , r + enter , untuk restar server hot reload
+
+
+npm run build
+// ketika sudah selesai hot reload dan ingin deploy
+
+//================================================================================
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

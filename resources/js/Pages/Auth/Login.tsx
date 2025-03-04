@@ -40,7 +40,7 @@ export default function Login({
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="Emailll" />
 
                     <TextInput
                         id="email"

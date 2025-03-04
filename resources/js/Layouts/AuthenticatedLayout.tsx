@@ -22,7 +22,12 @@ export default function Authenticated({
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+                                    {/* <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" /> */}
+                                    <img 
+                                        src="https://o2.funjourney.co.id/assets/images/sites/FJ_logo.png" 
+                                        alt="Fun Journey Logo"
+                                        className="h-20 w-20"
+                                    />
                                 </Link>
                             </div>
 

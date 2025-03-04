@@ -5,16 +5,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.tsx'],
+            input: 'resources/js/app.tsx',
             refresh: true,
         }),
         react(),
     ],
-    server: {
-        host: 'pos.test',
-        hmr: {
-            protocol: 'ws', // Gunakan WebSocket tanpa SSL
-            host: 'localhost',
-        },
-    },    
 });

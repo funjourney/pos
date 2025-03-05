@@ -26,7 +26,7 @@ const LocalStoragePage: React.FC = () => {
 
     const handleGetRequest = async () => {
         try {
-            const response = await apiClient.GET<{ message: string }>("/test");
+            const response = await apiClient.GET<{ message: string }>("/api/data-page");
             setApiResponse(response);
         } catch (error: any) {
             console.error("API GET error:", error.message);
@@ -38,7 +38,7 @@ const LocalStoragePage: React.FC = () => {
             const formData = new FormData();
             formData.append("name", "John Doe");
         
-            const response = await apiClient.POST<{ message: string }>("/test", formData);
+            const response = await apiClient.POST<{ message: string }>("/api/data-page", formData);
             setApiResponse(response);
         } catch (error: any) {
             console.error("API POST error:", error.message);
@@ -50,7 +50,7 @@ const LocalStoragePage: React.FC = () => {
             const formData = new FormData();
             formData.append("name", "Updated Name");
 
-            const response = await apiClient.PUT<{ message: string }>("/test/1", formData);
+            const response = await apiClient.PUT<{ message: string }>("/api/data-page/1", formData);
             setApiResponse(response);
         } catch (error: any) {
             console.error("API PUT error:", error.message);
@@ -59,7 +59,7 @@ const LocalStoragePage: React.FC = () => {
     
     const handleDeleteRequest = async () => {
         try {
-            const response = await apiClient.DELETE<{ message: string }>("/test/1");
+            const response = await apiClient.DELETE<{ message: string }>("/api/data-page/1");
             setApiResponse(response);
         } catch (error: any) {
             console.error("API DELETE error:", error.message);

@@ -63,71 +63,92 @@ const ShoppingCart: React.FC = () => {
     };
   
     return (
-      <div className="container mt-4" style={{ maxWidth: "95%" }}>
-  
-        {/* Gunakan Bootstrap Grid */}
-        <div className="row">
-            
-          {/* Bagian Cart Summary, lebar 4 kolom */}
-          <div className="col-md-3">
-            <div className="card p-3">
-              <h2>Cart Summary</h2>
-              <ul className="list-group">
-                {cart.length === 0 ? <li className="list-group-item">Cart is empty</li> : cart.map((item, idx) => (
-                  <li key={idx} className="list-group-item d-flex justify-content-between align-items-center">
-                    {item.name} (x{item.qty})
-                    <span>Rp {(item.price * item.qty).toLocaleString()}</span>
-                  </li>
-                ))}
-              </ul>
-              {cart.length > 0 && (
-                <button className="btn btn-success mt-3" onClick={checkout}>Checkout</button>
-              )}
+      <div>
+        
+        <header className="bg-light text-white p-3">
+            <div className="container d-flex justify-content-between align-items-center">
+                <h2 
+                style={{
+                  color: "#82868A",
+                  borderColor: "#979899",
+                  height: "auto"
+                }}>Shopping Cart</h2>
+                <div>
+                    <a href="/shopping-cart" className="btn btn-secondary me-2">← Back to Cart</a>
+                    <form action="/logout" method="POST" className="d-inline">
+                        <button type="submit" className="btn btn-danger">🚪 Logout</button>
+                    </form>
+                </div>
             </div>
-          </div>
+        </header>
+        
+        <main className="container mt-4" style={{ maxWidth: "95%" }}>
+                
+          {/* Gunakan Bootstrap Grid */}
+          <div className="row">
 
-          {/* Bagian produk, lebar 8 kolom */}
-          <div className="col-md-9">
-            <h1>Shopping Cart</h1>
-              {categories.map((category, index) => (
-                <div key={index} className="mb-3 text-center" style={{ marginTop: "25px" }}>
-                  <button
-                    className="btn btn-outline-light w-100 text-center p-3 d-block custom-btn"
-                    style={{
-                      color: "#a0a5ab",
-                      borderColor: "#a0a5ab",
-                      height: "auto"
-                    }}
-                    onClick={() => toggleCategory(category.name)}
-                  >
-                    <img src={category.img} className="mb-2" alt={category.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
-                    <span className="fs-4 d-block">{category.name} {openCategory === category.name ? "▲" : "▼"}</span>
-                  </button>
-                  {openCategory === category.name && (
-                    <div className="mt-2">
-                      <div className="row">
-                        {category.listProducts.map((product, idx) => (
-                          <div className="col-md-4 mb-4" key={idx}>
-                            <div className="card">
-                              <img src={product.img} className="card-img-top" alt={product.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
-                              <div className="card-body text-center">
-                                <h5 className="card-title">{product.name}</h5>
-                                <p className="card-text">Rp {product.price.toLocaleString()}</p>
-                                <button className="btn btn-danger mx-2" onClick={() => updateCart(product.name, product.price, -1)}>-</button>
-                                <span>{cart.find((item) => item.name === product.name)?.qty || 0}</span>
-                                <button className="btn btn-primary mx-2" onClick={() => updateCart(product.name, product.price, 1)}>+</button>
+            {/* Bagian Cart Summary, lebar 4 kolom */}
+            <div className="col-md-3">
+              <div className="card p-3">
+                <h2>Cart Summary</h2>
+                <ul className="list-group">
+                  {cart.length === 0 ? <li className="list-group-item">Cart is empty</li> : cart.map((item, idx) => (
+                    <li key={idx} className="list-group-item d-flex justify-content-between align-items-center">
+                      {item.name} (x{item.qty})
+                      <span>Rp {(item.price * item.qty).toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
+                {cart.length > 0 && (
+                  <button className="btn btn-success mt-3" onClick={checkout}>Checkout</button>
+                )}
+              </div>
+            </div>
+              
+            {/* Bagian produk, lebar 8 kolom */}
+            <div className="col-md-9">
+              {/* <h1>Shopping Cart</h1> */}
+                {categories.map((category, index) => (
+                  <div key={index} className="mb-3 text-center" style={{ marginBottom: "25px" }}>
+                    <button
+                      className="btn btn-outline-light w-100 text-center p-3 d-block custom-btn"
+                      style={{
+                        color: "#82868A",
+                        borderColor: "#979899",
+                        height: "auto"
+                      }}
+                      onClick={() => toggleCategory(category.name)}
+                    >
+                      <img src={category.img} className="mb-2" alt={category.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
+                      <span className="fs-4 d-block">{category.name} {openCategory === category.name ? "▲" : "▼"}</span>
+                    </button>
+                    {openCategory === category.name && (
+                      <div className="mt-2">
+                        <div className="row">
+                          {category.listProducts.map((product, idx) => (
+                            <div className="col-md-4 mb-4" key={idx}>
+                              <div className="card">
+                                <img src={product.img} className="card-img-top" alt={product.name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
+                                <div className="card-body text-center">
+                                  <h5 className="card-title">{product.name}</h5>
+                                  <p className="card-text">Rp {product.price.toLocaleString()}</p>
+                                  <button className="btn btn-danger mx-2" onClick={() => updateCart(product.name, product.price, -1)}>-</button>
+                                  <span>{cart.find((item) => item.name === product.name)?.qty || 0}</span>
+                                  <button className="btn btn-primary mx-2" onClick={() => updateCart(product.name, product.price, 1)}>+</button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+            </div>
+              
           </div>
-  
-        </div>
+        </main>
+
       </div>
     );
   };

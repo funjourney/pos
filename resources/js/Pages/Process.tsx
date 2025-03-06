@@ -78,6 +78,7 @@ const ProcessPage: React.FC = () => {
                       height: "auto"
                     }}>Process Details</h2>
                     <div>
+                        <a className="btn me-2">Table 01</a>
                         <a href="/shopping-cart" className="btn btn-secondary me-2">← Back to Cart</a>
                         <form action="/logout" method="POST" className="d-inline">
                             <button type="submit" className="btn btn-danger">🚪 Logout</button>

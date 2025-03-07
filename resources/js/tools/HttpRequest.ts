@@ -7,6 +7,18 @@ export class HttpRequest {
         this.baseUrl = import.meta.env.VITE_API_BASE_URL || '';
         axios.defaults.withCredentials = true; // Mengaktifkan credentials untuk CSRF token
         axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        
+        // Ambil CSRF token saat class diinisialisasi
+        this.initializeCsrfToken();
+    }
+
+    private async initializeCsrfToken(): Promise<void> {
+        try {
+            await axios.get(`${this.baseUrl}/sanctum/csrf-cookie`);
+            console.log("CSRF token initialized");
+        } catch (error) {
+            console.error("Failed to get CSRF token", error);
+        }
     }
 
     private async request<T>(method: string, endpoint: string, data?: any, isFormData: boolean = false): Promise<T> {
@@ -26,23 +38,18 @@ export class HttpRequest {
                 method,
                 url: `${this.baseUrl}${endpoint}`,
                 headers,
-                data,
+                withCredentials: true,
             };
-
-            if (method === 'GET' || method === 'DELETE') {
-                delete config.data;
+            
+            if (method !== 'GET' && method !== 'DELETE') {
+                config.data = data;
             }
-
-            // Ambil CSRF Token sebelum request kecuali untuk GET
-            if (method !== 'GET') {
-                await axios.get('/sanctum/csrf-cookie');
-            }
-
+            
             const response = await axios(config);
             return response.data;
         } catch (error: any) {
             console.error(`${method} request failed:`, error.response?.data || error.message);
-            throw new Error(error.response?.data?.message || error.message);
+            throw new Error(error.response?.data?.message || "Request failed");
         }
     }
 

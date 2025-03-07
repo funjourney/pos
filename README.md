@@ -1,5 +1,16 @@
 # catatan pengembang 
 
+
+composer create-project --prefer-dist laravel/laravel pos
+
+cd pos
+
+composer require laravel/breeze --dev
+
+php artisan breeze:install react --typescript
+
+//================================================================================
+
 php artisan migrate:fresh  
 //untuk migrate ulang sebuat table
 

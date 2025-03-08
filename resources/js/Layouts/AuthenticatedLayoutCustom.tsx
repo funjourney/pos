@@ -3,7 +3,7 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, useForm } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
 export default function AuthenticatedCustom({
@@ -11,6 +11,13 @@ export default function AuthenticatedCustom({
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
+
+    const { post } = useForm();
+
+    function handleLogout(e: { preventDefault: () => void; }) {
+        e.preventDefault();
+        post(route('logout'));
+    }
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -35,11 +42,12 @@ export default function AuthenticatedCustom({
                             <a href="#" onClick={() => window.history.back()} className="btn btn-secondary">
                                 ← Back to Previous Page
                             </a>
-                            <form action="/logout" method="POST" className="d-inline">
-                                <button type="submit" className="btn btn-danger">🚪 Logout
+                            <form onSubmit={handleLogout} className="d-inline">
+                                <button type="submit" className="btn btn-danger">
+                                    🚪 Logout
                                 </button>
                             </form>
-                            {user.role !== "user" && (
+                            {user.role === "user" && (
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <button type="button" className="btn btn-light d-flex align-items-center">

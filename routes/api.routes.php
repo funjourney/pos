@@ -8,4 +8,5 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/api')->group(function () {
     require __DIR__.'/detail-routes/data-page.routes.php';
     require __DIR__.'/detail-routes/shopping-cart.routes.php';
+    require __DIR__.'/detail-routes/process-payment.routes.php';    
 });

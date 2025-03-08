@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AuthenticatedLayoutCustom from "@/Layouts/AuthenticatedLayoutCustom";
 
 const PaymentPage: React.FC = () => {
     const [paymentMethod, setPaymentMethod] = useState<string>("cashier");
@@ -13,25 +14,13 @@ const PaymentPage: React.FC = () => {
     };
 
     return (
-        <div>
-            <header className="bg-light text-white p-3">
-                <div className="container d-flex justify-content-between align-items-center">
-                    <h2 
-                    style={{
-                      color: "#82868A",
-                      borderColor: "#979899",
-                      height: "auto"
-                    }}>Payment Details</h2>
-                    <div>
-                        <a className="btn me-2">Table 01</a>
-                        <a href="/shopping-cart" className="btn btn-secondary me-2">← Back to Cart</a>
-                        <form action="/logout" method="POST" className="d-inline">
-                            <button type="submit" className="btn btn-danger">🚪 Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </header>
-
+        <AuthenticatedLayoutCustom
+          header={
+              <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                  Payment Details
+              </h2>
+          }
+        >
             <main className="container py-5">
                 {/* <h2 className="mb-4">Payment Details</h2> */}
                 <form action="/process-payment" method="POST" encType="multipart/form-data">
@@ -106,7 +95,7 @@ const PaymentPage: React.FC = () => {
                     <button type="submit" className="btn btn-success" onClick={payNow}>Pay Now</button>
                 </form>
             </main>
-        </div>
+        </AuthenticatedLayoutCustom>
     );
 };
 

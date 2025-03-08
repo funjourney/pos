@@ -33,8 +33,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Dapatkan user yang baru saja login
+        $user = $request->user();
+
+        // Jika role user, redirect ke route shopping-cart
+        if ($user->role === 'user') {
+            return redirect()->intended(route('shopping-cart', false));
+        } else {
+            // Jika bukan role user, redirect ke dashboard
+            return redirect()->intended(route('dashboard', false));
+        }
     }
+
 
     /**
      * Destroy an authenticated session.

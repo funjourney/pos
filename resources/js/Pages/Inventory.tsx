@@ -1,5 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AuthenticatedLayoutCustom from "@/Layouts/AuthenticatedLayoutCustom";
 
 interface Ingredient {
   name: string;
@@ -24,25 +25,14 @@ const formatRupiah = (number: number): string => {
 
 const InventoryPage: React.FC = () => {
   return (
-    <div>
-
-      <header className="bg-light text-white p-3">
-          <div className="container d-flex justify-content-between align-items-center">
-              <h2 
-              style={{
-                color: "#82868A",
-                borderColor: "#979899",
-                height: "auto"
-              }}>Ingredient Inventory</h2>
-              <div>
-                  <a href="/shopping-cart" className="btn btn-secondary me-2">← Back to Cart</a>
-                  <form action="/logout" method="POST" className="d-inline">
-                      <button type="submit" className="btn btn-danger">🚪 Logout</button>
-                  </form>
-              </div>
-          </div>
-      </header>
-
+    <AuthenticatedLayoutCustom
+      header={
+          <h2 className="text-xl font-semibold leading-tight text-gray-800">
+              Ingredient Inventory
+          </h2>
+      }
+    >
+            
       <div className="container mt-5">
         {/* <h2 className="mb-4">Ingredient Inventory</h2> */}
         <table className="table table-bordered">
@@ -72,7 +62,7 @@ const InventoryPage: React.FC = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </AuthenticatedLayoutCustom>
   );
 };
 

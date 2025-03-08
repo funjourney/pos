@@ -16,11 +16,11 @@ Route::get('/data-page', function () {
 })//->middleware(['auth', 'verified'])
 ->name('data-page');
 
-//
-Route::get('/scan-barcode-table', function () {
-    return Inertia::render('ScanBarcodeTable');
-})
-->name('scan-barcode-table');
+// //
+// Route::get('/scan-barcode-table', function () {
+//     return Inertia::render('ScanBarcodeTable');
+// })
+// ->name('scan-barcode-table');
 
 //
 Route::get('/shopping-cart', function () {

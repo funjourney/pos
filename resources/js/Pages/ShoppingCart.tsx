@@ -61,6 +61,7 @@ const ShoppingCart: React.FC = () => {
       alert("Checkout berhasil! Terima kasih telah berbelanja.");
       setCart([]);
       localStorage.removeItem("shoppingCart");
+      window.location.href = "/payment";
     };
   
     return (

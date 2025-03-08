@@ -11,6 +11,12 @@ php artisan breeze:install react --typescript
 
 //================================================================================
 
+npm install html5-qrcode
+npm install bootstrap
+
+
+//================================================================================
+
 php artisan migrate:fresh  
 //untuk migrate ulang sebuat table
 

@@ -47,7 +47,7 @@ export default function AuthenticatedCustom({
                                     🚪 Logout
                                 </button>
                             </form>
-                            {user.role === "user" && (
+                            {user.role !== "user" && (
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <button type="button" className="btn btn-light d-flex align-items-center">

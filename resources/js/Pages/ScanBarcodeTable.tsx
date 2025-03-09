@@ -93,8 +93,8 @@ export default function Welcome({ auth }: PageProps<{}>) {
   
   const submit: FormEventHandler = (e) => {
     const jsonObject = {
-      "email": "aaa@aaa.aaa",
-      "password": "aaaaaaaa"
+      "email": "table01@example.com",
+      "password": "password"
     };      
     handleLogin(jsonObject);
   };
@@ -149,9 +149,9 @@ export default function Welcome({ auth }: PageProps<{}>) {
               display: scannerActive ? "block" : "none",
             }}
           ></div>
-          <div className="text-center mt-3 text-danger">
+          {/* <div className="text-center mt-3 text-danger">
             {scanResult ? `Barcode: ${scanResult}` : "Arahkan barcode ke kamera..."}
-          </div>
+          </div> */}
           <button
             className="btn btn-secondary w-100 mt-3"
             // onClick={() => (window.location.href = "/shopping-cart")}

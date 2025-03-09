@@ -38,7 +38,7 @@ export default function AuthenticatedCustom({
                             </h2>
                         </div>
                         <div className="d-flex align-items-center gap-3 ms-auto">
-                            <a className="btn btn-light">{user.name}</a>
+                            <a className="btn btn-light">{user.name ?? "-"}</a>
                             <a href="#" onClick={() => window.history.back()} className="btn btn-secondary">
                                 ← Back to Previous Page
                             </a>
@@ -51,7 +51,7 @@ export default function AuthenticatedCustom({
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <button type="button" className="btn btn-light d-flex align-items-center">
-                                            {user.name}
+                                            {user.name ?? "-"}
                                             <svg className="ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                                             </svg>

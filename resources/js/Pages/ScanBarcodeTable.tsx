@@ -1,10 +1,10 @@
 import { PageProps } from '@/types';
-import { Link } from '@inertiajs/react';
-import React, { useState, useEffect, useRef } from "react";
+import { Link, useForm } from '@inertiajs/react';
+import React, { useState, useEffect, useRef, FormEventHandler } from "react";
 import { ExecuteLocalStorage } from "../tools/LocalStorage";
 import { HttpRequest } from "../tools/HttpRequest";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Html5Qrcode } from "html5-qrcode";
+import { Html5Qrcode, Html5QrcodeResult } from "html5-qrcode";
 
 export default function Welcome({ auth }: PageProps<{}>) {
   const localStorageHandler = new ExecuteLocalStorage();
@@ -51,12 +51,16 @@ export default function Welcome({ auth }: PageProps<{}>) {
       await reader.start(
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
-        async (decodedText: string) => {
-          console.log("🔹 Barcode terdeteksi:", decodedText);
+        async (decodedText: string, decodedResult: Html5QrcodeResult) => {
+          // console.log("🔹 Barcode terdeteksi:", decodedText);
+          // console.log("🔹 decodedResult:", decodedResult.result);
           setScanResult(decodedText);
           await reader.stop();
           setScannerActive(false);
-          handleLogin(decodedText);
+          if (decodedResult.result.format?.formatName == "QR_CODE") {
+            const jsonObject = JSON.parse(decodedText);
+            handleLogin(jsonObject);
+          }
         },
         (errorMessage: string) => {
           console.warn("⚠️ Error QR Code:", errorMessage);
@@ -68,13 +72,12 @@ export default function Welcome({ auth }: PageProps<{}>) {
     }
   };
 
-  const handleLogin = async (barcodeData: string) => {
-    console.log("🔹 Handle login dengan barcode:", barcodeData);
+  const handleLogin = async (jsonObject: any) => {
+    console.log("🔹 Handle login dengan barcode:", jsonObject);
     try {
       const response = await apiClient.POST<{ message: string }>("/login", {
-        email: "guest@example.com",
-        password: "password",
-        barcode: barcodeData,
+        email: jsonObject.email,
+        password: jsonObject.password,
       });
       if (response) {
         console.log("✅ Login berhasil, redirecting...");
@@ -86,6 +89,16 @@ export default function Welcome({ auth }: PageProps<{}>) {
       console.error("❌ Error saat login:", error.message);
     }
   };
+
+  
+  const submit: FormEventHandler = (e) => {
+    const jsonObject = {
+      "email": "aaa@aaa.aaa",
+      "password": "aaaaaaaa"
+    };      
+    handleLogin(jsonObject);
+  };
+  
 
   return (
     // Pembungkus utama dengan transform scale untuk mengecilkan tampilan
@@ -141,7 +154,8 @@ export default function Welcome({ auth }: PageProps<{}>) {
           </div>
           <button
             className="btn btn-secondary w-100 mt-3"
-            onClick={() => (window.location.href = "/shopping-cart")}
+            // onClick={() => (window.location.href = "/shopping-cart")}
+            onClick={submit}
           >
             Lanjutkan Tanpa Scan
           </button>

@@ -1,17 +1,87 @@
-import React, { useState } from "react";
+import React, { FormEventHandler, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { HttpRequest } from "../tools/HttpRequest";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AuthenticatedLayoutCustom from "@/Layouts/AuthenticatedLayoutCustom";
 
+// declaration query param
+const useQueryParams = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = new URLSearchParams(location.search);
+  
+    const setParam = (key: string, value: string) => {
+      params.set(key, value);
+      navigate(`?${params.toString()}`, { replace: true });
+    };
+  
+    const removeParam = (key: string) => {
+      params.delete(key);
+      navigate(`?${params.toString()}`, { replace: true });
+    };
+  
+    return { params, setParam, removeParam };
+  };
+
+
+//declaration page
 const PaymentPage: React.FC = () => {
+    const apiClient = new HttpRequest();
+    const { params, setParam, removeParam } = useQueryParams();
+    const idOrder =  params.get("id") //id order
+
     const [paymentMethod, setPaymentMethod] = useState<string>("cashier");
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setPaymentMethod(event.target.value);
     };
-
-    const payNow = () => {
-        window.location.href = "/process";
+  
+    //get payment by orderid
+    const handleGetOnePaymentByOrderId = async (jsonObject: any) => {
+        try {
+          const response = await apiClient.POST<{ message: string }>("/payment", {
+            email: jsonObject.email,
+            password: jsonObject.password,
+          });
+          if (response) {
+            console.log("✅ payment berhasil, redirecting...");
+            window.location.href = "/shopping-cart";
+          } else {
+            console.error("❌ payment gagal.");
+          }
+        } catch (error: any) {
+          console.error("❌ Error saat payment:", error.message);
+        }
+      };
+    
+    //create or update payment
+    const handleCreateOrUpdatePayment = async (jsonObject: any) => {
+      try {
+        const response = await apiClient.POST<{ message: string }>("/payment", {
+          email: jsonObject.email,
+          password: jsonObject.password,
+        });
+        if (response) {
+          console.log("✅ payment berhasil, redirecting...");
+          window.location.href = "/shopping-cart";
+        } else {
+          console.error("❌ payment gagal.");
+        }
+      } catch (error: any) {
+        console.error("❌ Error saat payment:", error.message);
+      }
     };
+
+    
+    const payNow: FormEventHandler = (e) => {
+      const jsonObject = {
+        "email": "aaa@aaa.aaa",
+        "password": "aaaaaaaa"
+      };      
+      handleCreateOrUpdatePayment(jsonObject);
+    //   window.location.href = "/process";
+    };
+
 
     return (
         <AuthenticatedLayoutCustom

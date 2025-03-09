@@ -13,7 +13,7 @@ php artisan breeze:install react --typescript
 
 npm install html5-qrcode
 npm install bootstrap
-
+npm install react-router-dom
 
 //================================================================================
 
@@ -40,7 +40,36 @@ npm run build
 //other package
 composer show fruitcake/laravel-cors --all
 
+//================================================================================
 
+//disable CSRF melalui vendor, lewat PowerShell
+Get-ChildItem -Path . -Recurse -Filter "VerifyCsrfToken.php"
+
+lalu klik path dan ctrl + LMB , nanti akan diredirect menuju file
+
+tempelkan
+protected $except = [
+        'api/*', // Menonaktifkan CSRF untuk semua API
+    ];
+
+//================================================================================
+
+//melihat error Log
+storage/logs/laravel.log
+
+//================================================================================
+
+untuk init link gambar
+
+//============
+
+PS D:\file-kodingan\pos> php artisan storage:link
+   INFO  The [D:\file-kodingan\pos\public\storage] link has been connected to [D:\file-kodingan\pos\storage\app/public].        
+
+//============
+
+//lokasi path gambar
+D:\file-kodingan\pos\public\storage\products
 
 //================================================================================
 

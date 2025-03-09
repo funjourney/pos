@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Route::middleware('auth')->prefix('/shopping-cart')->group(function () {
-Route::prefix('/shopping-cart')->group(function () {
-    Route::get('/', [DataController::class, 'getData']);  // /shopping-cart
-    Route::post('/', [DataController::class, 'postData']); // /shopping-cart
-    Route::put('/{id}', [DataController::class, 'putData']); // /shopping-cart/{id}
-    Route::delete('/{id}', [DataController::class, 'deleteData']); // /shopping-cart/{id}
+Route::prefix('/products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']); // /products
+    Route::post('/', [ProductController::class, 'store']); // /products
+    Route::get('/{id}', [ProductController::class, 'show']); // /products/{id}
+    Route::put('/{id}', [ProductController::class, 'update']); // /products/{id}
+    Route::delete('/{id}', [ProductController::class, 'destroy']); // /products/{id}
 });

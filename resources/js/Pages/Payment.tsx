@@ -5,30 +5,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AuthenticatedLayoutCustom from "@/Layouts/AuthenticatedLayoutCustom";
 
 // declaration query param
-const useQueryParams = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const params = new URLSearchParams(location.search);
-  
-    const setParam = (key: string, value: string) => {
-      params.set(key, value);
-      navigate(`?${params.toString()}`, { replace: true });
-    };
-  
-    const removeParam = (key: string) => {
-      params.delete(key);
-      navigate(`?${params.toString()}`, { replace: true });
-    };
-  
-    return { params, setParam, removeParam };
-  };
+// const useQueryParams = () => {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const params = new URLSearchParams(location.search);
+
+//   const setParam = (key: string, value: string) => {
+//     params.set(key, value);
+//     navigate(`?${params.toString()}`, { replace: true });
+//   };
+
+//   const removeParam = (key: string) => {
+//     params.delete(key);
+//     navigate(`?${params.toString()}`, { replace: true });
+//   };
+
+//   return { params, setParam, removeParam };
+// };
 
 
 //declaration page
 const PaymentPage: React.FC = () => {
     const apiClient = new HttpRequest();
-    const { params, setParam, removeParam } = useQueryParams();
-    const idOrder =  params.get("id") //id order
+    // const { params, setParam, removeParam } = useQueryParams();
+    // const idOrder =  params.get("id") //id order
 
     const [paymentMethod, setPaymentMethod] = useState<string>("cashier");
 
@@ -39,13 +39,13 @@ const PaymentPage: React.FC = () => {
     //get payment by orderid
     const handleGetOnePaymentByOrderId = async (jsonObject: any) => {
         try {
-          const response = await apiClient.POST<{ message: string }>("/payment", {
+          const response = await apiClient.POST<{ message: string }>("/api/process-payment", {
             email: jsonObject.email,
             password: jsonObject.password,
           });
           if (response) {
             console.log("✅ payment berhasil, redirecting...");
-            window.location.href = "/shopping-cart";
+            window.location.href = "/process";
           } else {
             console.error("❌ payment gagal.");
           }
@@ -57,13 +57,13 @@ const PaymentPage: React.FC = () => {
     //create or update payment
     const handleCreateOrUpdatePayment = async (jsonObject: any) => {
       try {
-        const response = await apiClient.POST<{ message: string }>("/payment", {
+        const response = await apiClient.POST<{ message: string }>("/api/process-payment", {
           email: jsonObject.email,
           password: jsonObject.password,
         });
         if (response) {
           console.log("✅ payment berhasil, redirecting...");
-          window.location.href = "/shopping-cart";
+          window.location.href = "/process";
         } else {
           console.error("❌ payment gagal.");
         }
@@ -79,7 +79,7 @@ const PaymentPage: React.FC = () => {
         "password": "aaaaaaaa"
       };      
       handleCreateOrUpdatePayment(jsonObject);
-    //   window.location.href = "/process";
+      window.location.href = "/process";
     };
 
 
@@ -93,7 +93,7 @@ const PaymentPage: React.FC = () => {
         >
             <main className="container py-5">
                 {/* <h2 className="mb-4">Payment Details</h2> */}
-                <form action="/process-payment" method="POST" encType="multipart/form-data">
+                <form method="POST" encType="multipart/form-data">
                     <div className="mb-3">
                         <label htmlFor="tableNumber" className="form-label">Table Number</label>
                         <input type="number" className="form-control" id="tableNumber" name="tableNumber" required />

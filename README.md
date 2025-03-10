@@ -9,23 +9,48 @@ composer require laravel/breeze --dev
 
 php artisan breeze:install react --typescript
 
+//menampilkan List Routes pada Laravel 12
+php artisan route:list
+
+
 //================================================================================
 
 npm install html5-qrcode
 npm install bootstrap
 npm install react-router-dom
 
+
 //================================================================================
 
-php artisan migrate:fresh  
-//untuk migrate ulang sebuat table
-
-php artisan optimize:clear   
-//untuk membersihkan seluruh cache laravel 12
-
-
-npm cache clean
 //menghapus cache pada npm
+npm cache clean --force
+
+//Verifikasi cache (opsional, untuk memastikan tidak ada file yang rusak):
+npm cache verify
+
+//Hapus node_modules dan package-lock.json (jika masih mengalami error):
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+
+//Install ulang dependencies:
+npm install
+
+//================================================================================
+
+//Hapus Folder vendor dan File composer.lock
+Remove-Item -Recurse -Force vendor
+Remove-Item -Force composer.lock
+
+//Install Ulang Dependensi dengan Composer
+composer install
+
+//untuk membersihkan seluruh cache laravel 12
+php artisan optimize:clear
+
+//untuk migrate ulang sebuat table
+php artisan migrate:fresh
+
+//================================================================================
 
 npm run dev 
 // agar hot reload, ketika perubahan dilakukan, akses kembali  https://pos.test  

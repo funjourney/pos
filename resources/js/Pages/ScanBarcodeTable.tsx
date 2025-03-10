@@ -58,7 +58,8 @@ export default function Welcome({ auth }: PageProps<{}>) {
           await reader.stop();
           setScannerActive(false);
           if (decodedResult.result.format?.formatName == "QR_CODE") {
-            const jsonObject = JSON.parse(decodedText);
+            const cleanedString = decodedText.slice(1, -1);
+            const jsonObject = JSON.parse(cleanedString);
             handleLogin(jsonObject);
           }
         },

@@ -8,22 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class Product extends Model
+class Categorie extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'products';
+    protected $table = 'categories';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
     
-    protected $fillable = ['id', 'categorie_id', 'name', 'price', 'path_image', 'status'];
+    protected $fillable = ['id', 'name', 'path_image', 'status'];
 
     protected $casts = [
         'id' => 'string',
-        'categorie_id' => 'string',
         'name' => 'string',
-        'price' => 'decimal:2',
         'path_image' => 'string',
         'status' => 'string',
     ];

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class PaginationHelper
 {
@@ -19,17 +20,24 @@ class PaginationHelper
             $data = $query->get();
         }
 
+        // Convert snake_case keys to camelCase
+        $data = $data->map(function ($item) {
+            return collect($item->toArray())->mapWithKeys(function ($value, $key) {
+                return [Str::camel($key) => $value];
+            })->all();
+        });
+
         $totalPages = $limit > 0 ? ceil($totalItems / $limit) : 1;
         $hasNext = $currentPage < $totalPages;
         $hasPrev = $currentPage > 1;
 
         $pagination = [
-            'current_page' => $currentPage,
-            'page_size' => $limit,
-            'total_pages' => $totalPages,
-            'total_items' => $totalItems,
-            'has_next' => $hasNext,
-            'has_prev' => $hasPrev,
+            'currentPage' => $currentPage,
+            'pageSize' => $limit,
+            'totalPages' => $totalPages,
+            'totalItems' => $totalItems,
+            'hasNext' => $hasNext,
+            'hasPrev' => $hasPrev,
         ];
 
         return ['data' => $data, 'pagination' => $pagination];

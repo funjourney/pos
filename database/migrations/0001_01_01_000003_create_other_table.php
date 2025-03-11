@@ -12,22 +12,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
             $table->string('name')->nullable();
             $table->string('path_image')->nullable();
-            $table->string('type')->nullable();
             $table->string('status')->nullable();
             $table->timestampTz('created_at')->useCurrent();
             $table->timestampTz('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletesTz();
+        }); 
+
+        Schema::create('products', function (Blueprint $table) {
+            $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
+            $table->uuid('categorie_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('path_image')->nullable();
+            $table->bigInteger('price')->nullable();
+            // $table->string('type')->nullable();
+            $table->string('status')->nullable();
+            $table->timestampTz('created_at')->useCurrent();
+            $table->timestampTz('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletesTz();
+
+            $table->foreign('categorie_id')->references('id')->on('categories')->onDelete('cascade');
         });        
 
         Schema::create('inventories', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
             $table->string('name')->nullable();
             $table->string('path_image')->nullable();
-            $table->string('category')->nullable();
+            // $table->string('category')->nullable(); //kering / basah
             $table->string('stock_quantity')->nullable();
             $table->string('unit')->nullable();
             $table->bigInteger('price_per_unit')->nullable();
@@ -64,7 +78,9 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
             $table->uuid('order_id')->nullable();
             $table->uuid('product_id')->nullable();
-            $table->bigInteger('amount')->nullable();
+            $table->string('product_name')->nullable();
+            $table->bigInteger('product_price')->nullable();
+            $table->bigInteger('product_quantity')->nullable();
             $table->timestampTz('created_at')->useCurrent();
             $table->timestampTz('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletesTz();

@@ -19,13 +19,13 @@ class ApiResponseController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function error($code, $message)
+    public function error($code, $message, $data)
     {
         return response()->json([
             'code' => $code,
             'status' => 'error',
             'message' => $message,
-            'data' => null,
+            'data' => $data,
         ], $code);
     }
 }

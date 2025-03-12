@@ -9,27 +9,31 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-class Categorie extends Model
+class Checkout extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'categories';
+    protected $table = 'checkouts';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
     
     protected $fillable = [
         'id', 
-        'name', 
-        'path_image', 
-        'status'
+        'order_id', 
+        'product_id', 
+        'product_name', 
+        'product_price', 
+        'product_quantity'
     ];
 
     protected $casts = [
         'id' => 'string',
-        'name' => 'string',
-        'path_image' => 'string',
-        'status' => 'string',
+        'order_id' => 'string',
+        'product_id' => 'string',
+        'product_name' => 'string',
+        'product_price' => 'decimal:2',
+        'product_quantity' => 'decimal:2',
     ];
 
     protected static function boot()
@@ -57,12 +61,6 @@ class Categorie extends Model
         return collect($array)->mapWithKeys(function ($value, $key) {
             return [Str::camel($key) => $value];
         })->all();
-    }
-
-    public function products()
-    {
-        Log::info('Fetching products for category: ' . $this->id);
-        return $this->hasMany(Product::class, 'categorie_id', 'id');
     }
 
 }

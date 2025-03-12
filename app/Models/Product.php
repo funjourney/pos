@@ -17,7 +17,14 @@ class Product extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     
-    protected $fillable = ['id', 'categorie_id', 'name', 'price', 'path_image', 'status'];
+    protected $fillable = [
+        'id', 
+        'categorie_id', 
+        'name', 
+        'price', 
+        'path_image', 
+        'status'
+    ];
 
     protected $casts = [
         'id' => 'string',

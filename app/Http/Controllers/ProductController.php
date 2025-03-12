@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\PaginationHelper;
+use App\Helpers\DataProcessing;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Validation\ValidationException;
@@ -40,10 +41,15 @@ class ProductController extends Controller
             $query = Product::query()->orderBy($sortColumn, $sortOrder);
             $result = PaginationHelper::createPaginateFromEloquent($query, (int) $limit, (int) $currentPage);
 
+            $dataArrayProducts = DataProcessing::ConvertStructToMap(
+                $result['data'], 
+                ['createdAt', 'updatedAt', 'deletedAt'] // Hapus kunci ini
+            );
+
             return $this->apiResponse->success(
                 null,
                 'Products retrieved successfully.',
-                $result['data'],
+                $dataArrayProducts,
                 $result['pagination']
             );
         } catch (Exception $e) {

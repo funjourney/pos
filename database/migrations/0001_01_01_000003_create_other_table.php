@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestampTz('created_at')->useCurrent();
             $table->timestampTz('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletesTz();
-        }); 
+        });
 
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->softDeletesTz();
 
             $table->foreign('categorie_id')->references('id')->on('categories')->onDelete('cascade');
-        });        
+        });
 
         Schema::create('inventories', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));

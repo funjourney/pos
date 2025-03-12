@@ -9,26 +9,26 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-class Categorie extends Model
+class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'categories';
+    protected $table = 'orders';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
     
     protected $fillable = [
         'id', 
-        'name', 
-        'path_image', 
+        'user_id', 
+        'type', 
         'status'
     ];
 
     protected $casts = [
         'id' => 'string',
-        'name' => 'string',
-        'path_image' => 'string',
+        'user_id' => 'string',
+        'type' => 'string',
         'status' => 'string',
     ];
 
@@ -59,10 +59,16 @@ class Categorie extends Model
         })->all();
     }
 
-    public function products()
+    public function checkouts()
     {
-        Log::info('Fetching products for category: ' . $this->id);
-        return $this->hasMany(Product::class, 'categorie_id', 'id');
+        Log::info('Fetching checkouts for category: ' . $this->id);
+        return $this->hasMany(Checkout::class, 'order_id', 'id');
+    }
+
+    public function payments()
+    {
+        Log::info('Fetching payments for category: ' . $this->id);
+        return $this->hasMany(Payment::class, 'order_id', 'id');
     }
 
 }

@@ -1,24 +1,34 @@
-# catatan pengembang 
-
 
 composer create-project --prefer-dist laravel/laravel pos
 
-cd pos
+cd /d D:\file-kodingan\pos-repository
 
 composer require laravel/breeze --dev
 
-php artisan breeze:install react --typescript
+php artisan breeze:install
+
 
 //menampilkan List Routes pada Laravel 12
 php artisan route:list
 
+//===================================
 
-//================================================================================
+ Which Breeze stack would you like to install?
+  Blade with Alpine ....................................................................................................... blade  
+  Livewire (Volt Class API) with Alpine ................................................................................ livewire  
+  Livewire (Volt Functional API) with Alpine ................................................................ livewire-functional  
+  React with Inertia ...................................................................................................... react  
+  Vue with Inertia .......................................................................................................... vue  
+  API only .................................................................................................................. api  
+❯ blade
 
-npm install html5-qrcode
-npm install bootstrap
-npm install react-router-dom
+  Would you like dark mode support? (yes/no) [no]
+❯ yes
 
+  Which testing framework do you prefer? [Pest]
+  Pest ........................................................................................................................ 0  
+  PHPUnit ..................................................................................................................... 1  
+❯ 1
 
 //================================================================================
 
@@ -52,18 +62,6 @@ php artisan migrate:fresh
 
 //================================================================================
 
-npm run dev 
-// agar hot reload, ketika perubahan dilakukan, akses kembali  https://pos.test  
-// atau h + enter , r + enter , untuk restar server hot reload
-
-
-npm run build
-// ketika sudah selesai hot reload dan ingin deploy
-
-//================================================================================
-
-//other package
-composer show fruitcake/laravel-cors --all
 
 //================================================================================
 
@@ -98,6 +96,40 @@ D:\file-kodingan\pos\public\storage\products
 
 //================================================================================
 
+JIKA MENGGUNAKAN REACT
+
+//===
+
+composer create-project --prefer-dist laravel/laravel pos
+
+cd pos
+
+composer require laravel/breeze --dev
+
+php artisan breeze:install react --typescript
+
+//======================================================================
+
+npm install html5-qrcode
+npm install bootstrap
+npm install react-router-dom
+
+//================================================================================
+
+npm run dev 
+// agar hot reload, ketika perubahan dilakukan, akses kembali  https://pos.test  
+// atau h + enter , r + enter , untuk restar server hot reload
+
+
+npm run build
+// ketika sudah selesai hot reload dan ingin deploy
+
+//================================================================================
+
+//other package
+composer show fruitcake/laravel-cors --all
+
+//================================================================================
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 

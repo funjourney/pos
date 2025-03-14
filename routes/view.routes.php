@@ -1,12 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShoppingCartController;
+use App\Http\Controllers\ProductViewController;
 // use Inertia\Inertia;
 
 //
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+//
+Route::get('/shopping-cart', [ShoppingCartController::class, 'index'])->name('shopping-cart');
+
+Route::resource('/products', ProductViewController::class);
+
 
 // //
 // Route::get('/data-page', function () {

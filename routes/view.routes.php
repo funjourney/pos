@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ShoppingCartController;
+// use App\Http\Controllers\ShoppingCartController;
+use App\Http\Controllers\ScanBarcodeTableViewController;
+use App\Http\Controllers\ShoppingCartViewController;
 use App\Http\Controllers\ProductViewController;
 // use Inertia\Inertia;
 
@@ -11,8 +13,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 //
-Route::get('/shopping-cart', [ShoppingCartController::class, 'index'])->name('shopping-cart');
 
+Route::get('/', [ScanBarcodeTableViewController::class, 'index'])->name('scan-barcode-table');
+Route::get('/shopping-cart', [ShoppingCartViewController::class, 'index'])->name('shopping-cart');
 Route::resource('/products', ProductViewController::class);
 
 

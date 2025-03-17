@@ -77,6 +77,20 @@ protected $except = [
 
 //================================================================================
 
+//melakukan input agar bisa model bisa diakses lewat cli
+composer dump-autoload
+
+//akses cli
+php artisan tinker   
+
+//example CLI
+Categorie::with('products')->get()->toArray();
+AESCBCIV::encrypt(env('SIX_TEEN_DIGIT_KEY'), '{"value":"bdhsbahdsabj hsidfhis"}');
+AESCBCIV::decrypt(env('SIX_TEEN_DIGIT_KEY'), $encryptedText);
+AESCBCIV::decrypt(env('SIX_TEEN_DIGIT_KEY'), "q+P3xVfxAfyI516IJDnzmj5/8UJ98UhS79TOOyRFT0jBevEasi0ymLoiFrg1bZGtakty0R/uFvG1FTXg9MxeqOLhtZhtrPidFilQmzVrqbU=");
+
+//======================================
+
 //melihat error Log
 storage/logs/laravel.log
 

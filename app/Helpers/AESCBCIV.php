@@ -34,14 +34,14 @@ class AESCBCIV
         // Menggunakan Hex agar aman di URL
         $finalCiphertext = bin2hex($iv . $ciphertext);
 
-        Log::info("Encryption Debug:", [
-            'key' => bin2hex($key),
-            'iv' => bin2hex($iv),
-            'plaintext' => $plaintextInput,
-            'padded_plaintext' => bin2hex($plaintext),
-            'ciphertext' => bin2hex($ciphertext),
-            'final_ciphertext' => $finalCiphertext,
-        ]);
+        // Log::info("Encryption Debug:", [
+        //     'key' => bin2hex($key),
+        //     'iv' => bin2hex($iv),
+        //     'plaintext' => $plaintextInput,
+        //     'padded_plaintext' => bin2hex($plaintext),
+        //     'ciphertext' => bin2hex($ciphertext),
+        //     'final_ciphertext' => $finalCiphertext,
+        // ]);
 
         return $finalCiphertext;
     }
@@ -77,11 +77,11 @@ class AESCBCIV
         $iv = substr($ciphertextDecoded, 0, $ivLength);
         $ciphertext = substr($ciphertextDecoded, $ivLength);
 
-        Log::info("Decryption Debug:", [
-            'key' => bin2hex($key),
-            'iv' => bin2hex($iv),
-            'ciphertext' => bin2hex($ciphertext),
-        ]);
+        // Log::info("Decryption Debug:", [
+        //     'key' => bin2hex($key),
+        //     'iv' => bin2hex($iv),
+        //     'ciphertext' => bin2hex($ciphertext),
+        // ]);
 
         $decrypted = openssl_decrypt($ciphertext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
 
